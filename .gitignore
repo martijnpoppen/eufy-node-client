@@ -2,6 +2,6 @@
 .env
 node_modules
 credentials.json
-build
 *.log
 *.mp4
+.DS_Store

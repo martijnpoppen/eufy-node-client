@@ -47,7 +47,7 @@ export class HttpService {
   }
 
   public async voiceList(station_sn: string): Promise<DskKey> {
-    return await this.requestWithToken(`/voice/response/lists/${station_sn}`);
+    return await this.getWithToken(`/voice/response/lists/${station_sn}`);
   }
 
   public async allHistoryRecord(historyRecord?: HistoryRecordRequest): Promise<any> {
