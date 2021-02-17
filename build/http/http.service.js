@@ -53,7 +53,7 @@ class HttpService {
     }
     voiceList(station_sn) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.requestWithToken(`/voice/response/lists/${station_sn}`);
+            return yield this.getWithToken(`/voice/response/lists/${station_sn}`);
         });
     }
     allHistoryRecord(historyRecord) {
