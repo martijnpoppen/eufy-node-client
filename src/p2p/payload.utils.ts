@@ -10,7 +10,8 @@ export const buildLookupWithKeyPayload = (socket: Socket, p2pDid: string, dskKey
   const portAsBuffer = intToBufferBE(port);
   const portLittleEndianBuffer = Buffer.from([portAsBuffer[2], portAsBuffer[1]]);
   const ip = socket.address().address;
-  const ipAsBuffer = Buffer.from(ip.split('.'));
+  const splitIp = ip.split('.');
+  const ipAsBuffer = Buffer.from(splitIp!);
 
   const splitter = Buffer.from([0x00, 0x00]);
   const magic = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x00, 0x00]);
