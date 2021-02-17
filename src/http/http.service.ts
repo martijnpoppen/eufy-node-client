@@ -1,4 +1,4 @@
-import { postRequest } from './http.utils';
+import { postRequest, getRequest } from './http.utils';
 import { LoginResult, Hub, DeviceRequest, FullDevice, DskKey, Stream, ResultWrapper } from './http-response.models';
 import { HistoryRecordRequest, StreamRequest } from './http-request.models';
 
@@ -44,6 +44,10 @@ export class HttpService {
   public async stationDskKeys(station_sns: string): Promise<DskKey> {
     const reqBody = { station_sns: [station_sns] };
     return await this.requestWithToken<DskKey>(`/app/equipment/get_dsk_keys`, reqBody);
+  }
+
+  public async voiceList(station_sn: string): Promise<DskKey> {
+    return await this.requestWithToken(`/voice/response/lists/${station_sn}`);
   }
 
   public async allHistoryRecord(historyRecord?: HistoryRecordRequest): Promise<any> {
@@ -102,6 +106,15 @@ export class HttpService {
   ): Promise<T> {
     const token = await this.getToken();
     return await postRequest(`${this.baseUrl}${path}`, body, token, headers);
+  }
+
+  private async getWithToken<T>(
+    path: string,
+    body?: Record<string, unknown> | undefined,
+    headers?: Record<string, unknown>,
+  ): Promise<T> {
+    const token = await this.getToken();
+    return await getRequest(`${this.baseUrl}${path}`, token, headers);
   }
 
   private async getToken(): Promise<string> {
