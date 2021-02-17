@@ -60,27 +60,29 @@ export const buildStringTypeCommandPayload = (strValue: string, actor: string, c
   return Buffer.concat([magic, strValueBuffer, valueStrSubBuffer]);
 };
 
-export const buildIntStringCommandPayload = (value: number, actor: string, channel = 0): Buffer => {
-  const headerBuffer = Buffer.from([0x88, 0x00]);
-  const emptyBuffer = Buffer.from([0x00, 0x00]);
-  const magicBuffer = Buffer.from([0x01, 0x00]);
-  const channelBuffer = Buffer.from([channel, 0x00]);
-  const valueBuffer = Buffer.from([value, 0x00]);
-  const actorBuffer = Buffer.from(actor);
-  const rest = Buffer.alloc(88);
-
+export const buildIntStringCommandPayload = (value: number, strValue: string, channel = 0, strValueSub = ''): Buffer => {
+    const emptyBuffer = Buffer.from([0x00, 0x00]);
+    const magicBuffer = Buffer.from([0x01, 0x00]);
+    const channelBuffer = Buffer.from([channel, 0x00]);
+    const someintBuffer = Buffer.allocUnsafe(4);
+    someintBuffer.writeUInt32LE(0, 0);
+    const valueBuffer = Buffer.allocUnsafe(4);
+    valueBuffer.writeUInt32LE(value, 0);
+    const strValueBuffer = strValue.length === 0 ? Buffer.from([]) : stringWithLength(strValue);
+    const strValueSubBuffer = strValueSub.length === 0 ? Buffer.from([]) : stringWithLength(strValueSub);
+    const headerBuffer = Buffer.allocUnsafe(2);
+    headerBuffer.writeUInt16LE(someintBuffer.length + valueBuffer.length + strValueBuffer.length + strValueSubBuffer.length, 0);
+    
   return Buffer.concat([
     headerBuffer,
     emptyBuffer,
     magicBuffer,
     channelBuffer,
     emptyBuffer,
-    channelBuffer,
-    emptyBuffer,
+    someintBuffer,
     valueBuffer,
-    emptyBuffer,
-    actorBuffer,
-    rest,
+    strValueBuffer,
+    strValueSubBuffer
   ]);
 };
 
