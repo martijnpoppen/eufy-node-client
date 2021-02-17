@@ -1,0 +1,30 @@
+import { Address } from './models';
+import { CommandType } from './command.model';
+export declare class DeviceClientService {
+    private address;
+    private p2pDid;
+    private actor;
+    private addressTimeoutInMs;
+    private socket;
+    private connected;
+    private seqNumber;
+    private seenSeqNo;
+    private currentControlMessageBuilder;
+    constructor(address: Address, p2pDid: string, actor: string);
+    isConnected(): boolean;
+    connect(): Promise<boolean>;
+    private sendCamCheck;
+    sendPing(): void;
+    sendCommandWithIntString(commandType: CommandType, value: number, channel?: number): void;
+    sendCommandWithInt(commandType: CommandType, value: number): void;
+    sendCommandWithString(commandType: CommandType, value: string): void;
+    private sendCommand;
+    private handleMsg;
+    private handleData;
+    private videoBuffer;
+    private parseBinaryMessage;
+    private parseDataControlMessage;
+    private handleDataControl;
+    private sendAck;
+    private toDataTypeName;
+}
