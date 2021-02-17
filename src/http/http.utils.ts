@@ -29,30 +29,26 @@ export const postRequest = async <T>(
   return body;
 };
 
-export const getRequest = async <T>(
-    url: string,
-    token?: string,
-    headers: Record<string, unknown> = {},
-  ): Promise<T> => {
-    const resultHeaders = !!token ? { headers: { ...headers, 'x-auth-token': token } } : { ...headers };
-    const { body } = await got.get<T>(url, {
-      ...resultHeaders,
-      responseType: 'json',
-    });
-  
-    const anyBody = body as any;
-    if (anyBody.code !== 0) {
-      throw new Error(`Request failed: ${url} -> ${anyBody.code} - ${anyBody.msg}`);
-    }
-  
-    LOG(`url: ${url} -> body: ${JSON.stringify(body)}`);
-  
-    if (!!anyBody.data) {
-      return anyBody.data;
-    }
-  
-    return body;
-  };
+export const getRequest = async <T>(url: string, token?: string, headers: Record<string, unknown> = {}): Promise<T> => {
+  const resultHeaders = !!token ? { headers: { ...headers, 'x-auth-token': token } } : { ...headers };
+  const { body } = await got.get<T>(url, {
+    ...resultHeaders,
+    responseType: 'json',
+  });
+
+  const anyBody = body as any;
+  if (anyBody.code !== 0) {
+    throw new Error(`Request failed: ${url} -> ${anyBody.code} - ${anyBody.msg}`);
+  }
+
+  LOG(`url: ${url} -> body: ${JSON.stringify(body)}`);
+
+  if (!!anyBody.data) {
+    return anyBody.data;
+  }
+
+  return body;
+};
 
 export const promiseAny = <T>(iterable: Array<Promise<any>>): Promise<T> => {
   return reverse(Promise.all([...iterable].map(reverse)));
