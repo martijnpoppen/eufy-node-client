@@ -15,7 +15,7 @@ export declare class DeviceClientService {
     connect(): Promise<boolean>;
     private sendCamCheck;
     sendPing(): void;
-    sendCommandWithIntString(commandType: CommandType, value: number, channel?: number): void;
+    sendCommandWithIntString(commandType: CommandType, value: any, valueSub?: number, strValue?: string, channel?: number): void;
     sendCommandWithInt(commandType: CommandType, value: number): void;
     sendCommandWithString(commandType: CommandType, value: string): void;
     private sendCommand;
