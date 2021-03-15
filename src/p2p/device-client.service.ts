@@ -75,7 +75,13 @@ export class DeviceClientService {
     sendMessage(this.socket, this.address, RequestMessageType.PING);
   }
 
-  public sendCommandWithIntString(commandType: CommandType, value: any, valueSub = 0, strValue = "", channel = 0): void {
+  public sendCommandWithIntString(
+    commandType: CommandType,
+    value: any,
+    valueSub = 0,
+    strValue = '',
+    channel = 0,
+  ): void {
     // SET_COMMAND_WITH_INT_STRING_TYPE = msgTypeID == 10
     const payload = buildIntStringCommandPayload(value, valueSub, strValue, this.actor, channel);
     this.sendCommand(commandType, payload);

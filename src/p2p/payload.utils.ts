@@ -61,7 +61,13 @@ export const buildStringTypeCommandPayload = (strValue: string, actor: string, c
   return Buffer.concat([magic, strValueBuffer, valueStrSubBuffer]);
 };
 
-export const buildIntStringCommandPayload = (value: number, valueSub = 0, strValue= "", strValueSub = "", channel = 0): Buffer => {
+export const buildIntStringCommandPayload = (
+  value: number,
+  valueSub = 0,
+  strValue = '',
+  strValueSub = '',
+  channel = 0,
+): Buffer => {
   const emptyBuffer = Buffer.from([0x00, 0x00]);
   const magicBuffer = Buffer.from([0x01, 0x00]);
   const channelBuffer = Buffer.from([channel, 0x00]);
@@ -72,7 +78,10 @@ export const buildIntStringCommandPayload = (value: number, valueSub = 0, strVal
   const strValueBuffer = strValue.length === 0 ? Buffer.from([]) : stringWithLength(strValue);
   const strValueSubBuffer = strValueSub.length === 0 ? Buffer.from([]) : stringWithLength(strValueSub);
   const headerBuffer = Buffer.allocUnsafe(2);
-  headerBuffer.writeUInt16LE(someintBuffer.length + valueBuffer.length + strValueBuffer.length + strValueSubBuffer.length, 0);
+  headerBuffer.writeUInt16LE(
+    someintBuffer.length + valueBuffer.length + strValueBuffer.length + strValueSubBuffer.length,
+    0,
+  );
 
   return Buffer.concat([
     headerBuffer,
@@ -83,8 +92,8 @@ export const buildIntStringCommandPayload = (value: number, valueSub = 0, strVal
     someintBuffer,
     valueBuffer,
     strValueBuffer,
-    strValueSubBuffer
-]);
+    strValueSubBuffer,
+  ]);
 };
 
 export const buildCommandHeader = (seqNumber: number, commandType: CommandType): Buffer => {
