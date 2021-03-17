@@ -61,39 +61,30 @@ export const buildStringTypeCommandPayload = (strValue: string, actor: string, c
   return Buffer.concat([magic, strValueBuffer, valueStrSubBuffer]);
 };
 
-export const buildIntStringCommandPayload = (
-  value: number,
-  valueSub = 0,
-  strValue = '',
-  strValueSub = '',
-  channel = 0,
-): Buffer => {
-  const emptyBuffer = Buffer.from([0x00, 0x00]);
-  const magicBuffer = Buffer.from([0x01, 0x00]);
-  const channelBuffer = Buffer.from([channel, 0x00]);
-  const someintBuffer = Buffer.allocUnsafe(4);
-  someintBuffer.writeUInt32LE(valueSub, 0);
-  const valueBuffer = Buffer.allocUnsafe(4);
-  valueBuffer.writeUInt32LE(value, 0);
-  const strValueBuffer = strValue.length === 0 ? Buffer.from([]) : stringWithLength(strValue);
-  const strValueSubBuffer = strValueSub.length === 0 ? Buffer.from([]) : stringWithLength(strValueSub);
-  const headerBuffer = Buffer.allocUnsafe(2);
-  headerBuffer.writeUInt16LE(
-    someintBuffer.length + valueBuffer.length + strValueBuffer.length + strValueSubBuffer.length,
-    0,
-  );
+export const buildIntStringCommandPayload = (value: number, valueSub = 0, strValue = "", strValueSub = "", channel = 0): Buffer => {
+    const emptyBuffer = Buffer.from([0x00, 0x00]);
+    const magicBuffer = Buffer.from([0x01, 0x00]);
+    const channelBuffer = Buffer.from([channel, 0x00]);
+    const someintBuffer = Buffer.allocUnsafe(4);
+    someintBuffer.writeUInt32LE(valueSub, 0);
+    const valueBuffer = Buffer.allocUnsafe(4);
+    valueBuffer.writeUInt32LE(value, 0);
+    const strValueBuffer = strValue.length === 0 ? Buffer.from([]) : stringWithLength(strValue);
+    const strValueSubBuffer = strValueSub.length === 0 ? Buffer.from([]) : stringWithLength(strValueSub);
+    const headerBuffer = Buffer.allocUnsafe(2);
+    headerBuffer.writeUInt16LE(someintBuffer.length + valueBuffer.length + strValueBuffer.length + strValueSubBuffer.length, 0);
 
-  return Buffer.concat([
-    headerBuffer,
-    emptyBuffer,
-    magicBuffer,
-    channelBuffer,
-    emptyBuffer,
-    someintBuffer,
-    valueBuffer,
-    strValueBuffer,
-    strValueSubBuffer,
-  ]);
+    return Buffer.concat([
+        headerBuffer,
+        emptyBuffer,
+        magicBuffer,
+        channelBuffer,
+        emptyBuffer,
+        someintBuffer,
+        valueBuffer,
+        strValueBuffer,
+        strValueSubBuffer
+    ]);
 };
 
 export const buildCommandHeader = (seqNumber: number, commandType: CommandType): Buffer => {
