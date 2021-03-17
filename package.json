@@ -12,7 +12,6 @@
     "lint": "eslint 'src/**/*.{js,ts}'",
     "lint:fix": "eslint 'src/**/*.{js,ts}' --fix",
     "check:version": "npx npm-check-updates",
-    "prepare": "npm run build",
     "postpublish": "npm run increase:minor",
     "increase:patch": "npm version patch",
     "increase:minor": "npm version minor",
