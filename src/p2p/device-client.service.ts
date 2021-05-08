@@ -7,6 +7,7 @@ import {
   buildIntCommandPayload,
   buildIntStringCommandPayload,
   buildStringTypeCommandPayload,
+  buildCommandWithStringTypePayload,
   buildCommandHeader,
   MAGIC_WORD,
 } from './payload.utils';
@@ -98,6 +99,30 @@ export class DeviceClientService {
     const payload = buildStringTypeCommandPayload(value, this.actor);
     this.sendCommand(commandType, payload);
   }
+
+  public sendCommandWithStringPayload(commandType: CommandType, value: string, channel = 0): void {
+    const payload = buildCommandWithStringTypePayload(value, channel);
+    let nested_commandType = undefined;
+
+    if (commandType == CommandType.CMD_SET_PAYLOAD) {
+        try {
+            const json = JSON.parse(value);
+            nested_commandType = json.cmd;
+        } catch (error) {
+           LOG(`${this.constructor.name}.sendCommandWithString(): CMD_SET_PAYLOAD - Error: ${error}`);
+        }
+    } else if (commandType == CommandType.CMD_DOORBELL_SET_PAYLOAD) {
+        try {
+            const json = JSON.parse(value);
+            nested_commandType = json.commandType;
+        } catch (error) {
+           LOG(`${this.constructor.name}.sendCommandWithString(): CMD_DOORBELL_SET_PAYLOAD - Error: ${error}`);
+        }
+    }
+
+    this.sendCommand(commandType, payload);
+}
+
 
   private sendCommand(commandType: CommandType, payload: Buffer): void {
     // Command header

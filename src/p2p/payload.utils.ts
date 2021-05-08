@@ -104,6 +104,26 @@ export const buildCommandHeader = (seqNumber: number, commandType: CommandType):
   return Buffer.concat([dataTypeBuffer, seqAsBuffer, magicString, commandTypeBuffer]);
 };
 
+export const buildCommandWithStringTypePayload = (value: string, channel = 0): Buffer => {
+    // type = 6
+    //setCommandWithString()
+    const headerBuffer = Buffer.allocUnsafe(2);
+    const emptyBuffer = Buffer.from([0x00, 0x00]);
+    const magicBuffer = Buffer.from([0x01, 0x00]);
+    const channelBuffer = Buffer.from([channel, 0x00]);
+    const jsonBuffer = Buffer.from(value);
+    headerBuffer.writeUInt16LE(jsonBuffer.length, 0);
+
+    return Buffer.concat([
+        headerBuffer,
+        emptyBuffer,
+        magicBuffer,
+        channelBuffer,
+        emptyBuffer,
+        jsonBuffer,
+    ]);
+};
+
 const intToArray = (inp: string | number): Array<number> => {
   const digit = parseInt(inp.toString(), 10);
   let str = digit.toString(16);
