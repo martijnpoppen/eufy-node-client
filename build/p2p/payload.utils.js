@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.intToBufferLE = exports.intToBufferBE = exports.buildCommandHeader = exports.buildIntStringCommandPayload = exports.buildStringTypeCommandPayload = exports.buildIntCommandPayload = exports.buildCheckCamPayload = exports.buildLookupWithKeyPayload = exports.MAGIC_WORD = void 0;
+exports.intToBufferLE = exports.intToBufferBE = exports.buildCommandWithStringTypePayload = exports.buildCommandHeader = exports.buildIntStringCommandPayload = exports.buildStringTypeCommandPayload = exports.buildIntCommandPayload = exports.buildCheckCamPayload = exports.buildLookupWithKeyPayload = exports.MAGIC_WORD = void 0;
 exports.MAGIC_WORD = 'XZYH';
 exports.buildLookupWithKeyPayload = (socket, p2pDid, dskKey) => {
     const p2pDidBuffer = p2pDidToBuffer(p2pDid);
@@ -52,7 +52,7 @@ exports.buildStringTypeCommandPayload = (strValue, actor, channel = 255) => {
     const valueStrSubBuffer = stringWithLength(actor, 128);
     return Buffer.concat([magic, strValueBuffer, valueStrSubBuffer]);
 };
-exports.buildIntStringCommandPayload = (value, valueSub = 0, strValue = "", strValueSub = "", channel = 0) => {
+exports.buildIntStringCommandPayload = (value, valueSub = 0, strValue = '', strValueSub = '', channel = 0) => {
     const emptyBuffer = Buffer.from([0x00, 0x00]);
     const magicBuffer = Buffer.from([0x01, 0x00]);
     const channelBuffer = Buffer.from([channel, 0x00]);
@@ -73,7 +73,7 @@ exports.buildIntStringCommandPayload = (value, valueSub = 0, strValue = "", strV
         someintBuffer,
         valueBuffer,
         strValueBuffer,
-        strValueSubBuffer
+        strValueSubBuffer,
     ]);
 };
 exports.buildCommandHeader = (seqNumber, commandType) => {
@@ -82,6 +82,17 @@ exports.buildCommandHeader = (seqNumber, commandType) => {
     const magicString = Buffer.from(exports.MAGIC_WORD);
     const commandTypeBuffer = exports.intToBufferLE(commandType, 2);
     return Buffer.concat([dataTypeBuffer, seqAsBuffer, magicString, commandTypeBuffer]);
+};
+exports.buildCommandWithStringTypePayload = (value, channel = 0) => {
+    // type = 6
+    //setCommandWithString()
+    const headerBuffer = Buffer.allocUnsafe(2);
+    const emptyBuffer = Buffer.from([0x00, 0x00]);
+    const magicBuffer = Buffer.from([0x01, 0x00]);
+    const channelBuffer = Buffer.from([channel, 0x00]);
+    const jsonBuffer = Buffer.from(value);
+    headerBuffer.writeUInt16LE(jsonBuffer.length, 0);
+    return Buffer.concat([headerBuffer, emptyBuffer, magicBuffer, channelBuffer, emptyBuffer, jsonBuffer]);
 };
 const intToArray = (inp) => {
     const digit = parseInt(inp.toString(), 10);

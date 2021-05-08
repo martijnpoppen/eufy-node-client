@@ -82,6 +82,29 @@ class DeviceClientService {
         const payload = payload_utils_1.buildStringTypeCommandPayload(value, this.actor);
         this.sendCommand(commandType, payload);
     }
+    sendCommandWithStringPayload(commandType, value, channel = 0) {
+        const payload = payload_utils_1.buildCommandWithStringTypePayload(value, channel);
+        let nested_commandType = undefined;
+        if (commandType == command_model_1.CommandType.CMD_SET_PAYLOAD) {
+            try {
+                const json = JSON.parse(value);
+                nested_commandType = json.cmd;
+            }
+            catch (error) {
+                logging_1.LOG(`${this.constructor.name}.sendCommandWithString(): CMD_SET_PAYLOAD - Error: ${error}`);
+            }
+        }
+        else if (commandType == command_model_1.CommandType.CMD_DOORBELL_SET_PAYLOAD) {
+            try {
+                const json = JSON.parse(value);
+                nested_commandType = json.commandType;
+            }
+            catch (error) {
+                logging_1.LOG(`${this.constructor.name}.sendCommandWithString(): CMD_DOORBELL_SET_PAYLOAD - Error: ${error}`);
+            }
+        }
+        this.sendCommand(commandType, payload);
+    }
     sendCommand(commandType, payload) {
         // Command header
         const msgSeqNumber = this.seqNumber++;

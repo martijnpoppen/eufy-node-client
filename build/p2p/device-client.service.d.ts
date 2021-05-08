@@ -18,6 +18,7 @@ export declare class DeviceClientService {
     sendCommandWithIntString(commandType: CommandType, value: any, valueSub?: number, strValue?: string, channel?: number): void;
     sendCommandWithInt(commandType: CommandType, value: number): void;
     sendCommandWithString(commandType: CommandType, value: string): void;
+    sendCommandWithStringPayload(commandType: CommandType, value: string, channel?: number): void;
     private sendCommand;
     private handleMsg;
     private handleData;
